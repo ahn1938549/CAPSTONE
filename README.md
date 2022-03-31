@@ -9,3 +9,13 @@ anaconda3 prompt 바로가기 속성 -> 대상 -> cmd.exe "/K" C:\Users\ejdjc\an
 Jetson Nano Torchvision 및 Pytorch
 
 https://forums.developer.nvidia.com/t/pytorch-for-jetson-version-1-10-now-available/72048
+
+https://github.com/kookmin-sw/2019-cap1-2019_6/blob/master/src/Final/final_beEyes_objectDetection.py 참고
+
+python detect.py --source 0 --weights best.pt 
+
+python detect.py --source st/ --weights best.pt --conf 0.4
+
+python train.py --img 640 --batch 4 --epochs 5 --data data/coco128.yaml --cfg models/yolov5s.yaml --weights weights/yolov5s.pt
+
+
