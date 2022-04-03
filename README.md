@@ -1,4 +1,4 @@
-# CAPSTONE
+. CAPSTONE
 
 Pycharm Terminal 수정 방법 (아나콘다와 연동 하기 위해서)
 
@@ -23,3 +23,9 @@ camera check
 
 sudo apt-get install v4l-utils
 v4l2-ctl --list-devices
+
+torch with torchvision 0.9.0 error whith PIL 
+
+pip install pillow==4.1.1 is worked I don't know why
+
+not save mode
