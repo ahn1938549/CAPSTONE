@@ -29,3 +29,5 @@ torch with torchvision 0.9.0 error whith PIL
 pip install pillow==4.1.1 is worked I don't know why
 
 not save mode
+
+pip install -r requirements.txt
