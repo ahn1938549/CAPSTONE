@@ -19,3 +19,7 @@ python detect.py --source st/ --weights best.pt --conf 0.4
 python train.py --img 640 --batch 4 --epochs 5 --data data/coco128.yaml --cfg models/yolov5s.yaml --weights weights/yolov5s.pt
 
 
+camera check
+
+sudo apt-get install v4l-utils
+v4l2-ctl --list-devices
