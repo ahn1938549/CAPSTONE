@@ -31,3 +31,5 @@ pip install pillow==4.1.1 is worked I don't know why
 not save mode
 
 pip install -r requirements.txt
+
+python3 detect.py --soucre 0 "nvarguscamerasrc ! video/x-raw(memory:NVMM),width=1280, height=720, framerate=30/1, format=NV12 ! nvvidconv flip_method=0 ! video/x-raw, format=BGRx, width=640, height=480 ! videoconvert ! video/x-raw, format=BGR ! appsink"
