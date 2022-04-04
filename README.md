@@ -35,3 +35,14 @@ pip install -r requirements.txt
 python3 detect.py --soucre 0 "nvarguscamerasrc ! video/x-raw(memory:NVMM),width=1280, height=720, framerate=30/1, format=NV12 ! nvvidconv flip_method=0 ! video/x-raw, format=BGRx, width=640, height=480 ! videoconvert ! video/x-raw, format=BGR ! appsink"
 
 fps를 높이려고 찾아본 결과 protobuf와 deepstream을 찾을 수 있었고 nano5s 모델도 있는 것을 확인하였다. 22-04-04
+
+TensorRT를 위해선 ONNX가 필요
+ONNX설치중 Protobuf를 필요로한다.
+
+deepstream은 TensorRt가 필요로 한다.
+
+Deepstream을 실행시키기 위해 TensorRT
+TensorRT를 위해 ONNX
+ONNX를 위해 Protobuf
+
+Docker 설치하기
