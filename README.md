@@ -1,4 +1,4 @@
-. CAPSTONE
+#CAPSTONE
 
 2022년 캡스톤 프로젝트 
 
