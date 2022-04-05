@@ -65,16 +65,13 @@ python3 setup.py install --user
 에서 잘 뜬다면 설치 성공
 
 ```markdown
-torch with torchvision 0.9.0 error whith PIL
-```
-
-에러는 
-
-```markdown
+# torch with torchvision 0.9.0 error whith PIL
 pip install pillow==4.1.1
 ```
 
-설치시에 해결 가능하다.
+다음과 같은 에러는 pillow 설치시에 해결 가능
+
+
 
 
 
