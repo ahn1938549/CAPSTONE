@@ -1,4 +1,4 @@
-#Jetson Nano 준비 (SD카드 필수)
+# Jetson Nano 준비 (SD카드 필수)
 
 https://developer.nvidia.com/embedded/jetpack 에서 Jetpack 다운로드 
 
@@ -8,7 +8,7 @@ Jetson에 설치 및 apt update 및 apt upgrade  하기 (초기 안정화)
 
 
 
-##카메라 확인
+## 카메라 확인
 
 ```markdown
 sudo apt-get install v4l-utils -y  
@@ -35,7 +35,7 @@ gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! \
 
 
 
-##Jetson nano에 Anaconda 설치
+## Jetson nano에 Anaconda 설치
 
 
 
