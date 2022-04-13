@@ -4,4 +4,4 @@
 
 Docker 에서 다음과 같이 보여질 것이다.
 
-![Docker](/home/bong/Pictures/docker first image.png)
+![image](images/docker first image.png)
