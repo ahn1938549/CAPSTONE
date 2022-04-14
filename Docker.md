@@ -15,7 +15,7 @@ docker run  -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY --name Cap 
 X11서버를 사용하여 공유
 
 ```
-docker run  docker run -p 6080:80 --it --name Cap ubuntu
+docker run -p 6080:80 --it --name Cap ubuntu
 ```
 
 -e 는 환경변수
