@@ -61,7 +61,7 @@ main-build: USART.elf secondary-outputs
 
 # Tool invocations
 USART.elf USART.map: $(OBJS) $(USER_OBJS) C:\Users\ejdjc\STM32CubeIDE\workspace_1.9.0\USART\STM32F401RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "USART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ejdjc\STM32CubeIDE\workspace_1.9.0\USART\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="USART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "USART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ejdjc\STM32CubeIDE\workspace_1.9.0\USART\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="USART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
