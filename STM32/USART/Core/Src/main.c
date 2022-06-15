@@ -130,6 +130,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 		if(USART_CNT == 50)
 		{
+			
+			__enable_irq();
 			if(Rx_indx ==0)
 			{
 
@@ -150,6 +152,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			IMU();
 			HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 			HAL_UART_Transmit(&huart2, Rx_buffer,100,1000);
+			__disable_irq();
 
 
 
