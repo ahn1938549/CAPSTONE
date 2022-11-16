@@ -43,6 +43,7 @@
 
 /* Private variables ---------------------------------------------------------*/
  TIM_HandleTypeDef htim1;
+DMA_HandleTypeDef hdma_tim1_up;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -71,7 +72,7 @@ static void MX_USART1_UART_Init(void);
 static HAL_StatusTypeDef rcvStat;
 static float IMU_sensor[9];
 static uint8_t Rx_buffer[100] = {0,}; // �?? ?��보�?? ???��?�� 배열
-static int USART_CNT = 0; // ???���?? 주기
+volatile uint8_t USART_CNT = 0; // ???���?? 주기
 static uint8_t Rx_data; //1바이?��?�� 받아?��?��?��.
 int Rx_indx=0;
 static int flag = 0;
@@ -80,15 +81,16 @@ volatile double data[15];
 volatile double datas[15];
 volatile bool gotPacket = true;
 #define BUF_SIZE 100
-static uint8_t Buffer[BUF_SIZE] = {0,};
-static uint8_t Buffers[BUF_SIZE] = {0,};
-static uint8_t head = 0;
-static uint8_t heads = 0;;
-static uint8_t data_cnt;
+volatile static uint8_t Buffer[BUF_SIZE] = {0,};
+volatile static uint8_t Buffers[BUF_SIZE] = {0,};
+volatile static uint8_t Bufferss[BUF_SIZE] = "HELLO World\r\n";
+volatile static uint8_t head = 0;
+volatile static uint8_t heads = 0;;
+volatile static uint8_t data_cnt;
 static uint8_t rx_data;
 static uint8_t cnt;
-double k;
-volatile uint8_t str[] = "Hello\n\r";
+static uint8_t k=0;
+volatile uint8_t str[10];
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -149,27 +151,45 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == TIM1)
 	{
 		USART_CNT++;
-		if(USART_CNT == 100)
+
+		//HAL_DMA_Start(&hdma_tim1_up, (uint32_t)Bufferss, (uint32_t)&USART2->DR, sizeof(Bufferss));
+		if(USART_CNT == 80)
 		{
 			HAL_UART_Transmit(&huart1, star, 1, 1000);
+			//HAL_DMA_Start_IT(hdma, SrcAddress, DstAddress, DataLength)
+		}
+		else if(USART_CNT == 100)
+		{
 			//HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+			//HAL_UART_Transmit_DMA(&huart2, Bufferss, sizeof(Bufferss));
+			USART_CNT = 0;
+			HAL_UART_Transmit_DMA(&huart2, Buffers, sizeof(Buffers));
+			if(gotPacket == false)
+			{
+				sprintf(str, "%d \r\n", k);
 
+				//HAL_UART_Transmit_DMA(&huart2, Buffers, sizeof(Buffers));
+				//HAL_UART_Transmit_DMA(&huart2, str, sizeof(str));
+				gotPacket = true;
+				//__WFI()
+				k++;
+				//
+
+			}
+		}
+		else if(USART_CNT == 120)
+		{
 			USART_CNT = 0;
 			Rx_indx=0;
-
-			gotPacket = true;
-			/*if(gotPacket == 1)
+			for(int temp_size=0; temp_size<100;temp_size++) // 배열 초기화
 			{
-				HAL_UART_Transmit_DMA(&huart2, Buffers, sizeof(Buffers));
-				gotPacket = 0;
-				for(int temp_size=0; temp_size<sizeof(Buffer);temp_size++) // 배열 초기화
-				{
-					Buffers[temp_size] = 0;
-				}
-			}*/
+				Buffers[temp_size] = 0X00;
+			}
 		}
+
 	}
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -216,6 +236,7 @@ int main(void)
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
   HAL_UART_Receive_IT (&huart1, &Rx_data, 1);
+  //HAL_DMA_Start(&hdma_tim1_up, (uint32_t)Bufferss, (uint32_t)&USART2->DR, sizeof(Bufferss));
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -290,14 +311,16 @@ static void MX_TIM1_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
   /* USER CODE BEGIN TIM1_Init 1 */
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 84 - 1;
+  htim1.Init.Prescaler = 8400 - 1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 10000 - 1;
+  htim1.Init.Period = 100 - 1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -310,9 +333,35 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_OC_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_TIMING;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_OC_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
   {
     Error_Handler();
   }
@@ -433,11 +482,14 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Stream6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 1);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA2_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 1);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+  /* DMA2_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream5_IRQn);
 
 }
 
