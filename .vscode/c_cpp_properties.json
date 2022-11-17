@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/bong/robot_ws/install/udp_driver/include/**",
+        "/home/bong/robot_ws/install/serial_driver/include/**",
+        "/home/bong/robot_ws/install/io_context/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/bong/robot_ws/src/transport_drivers/io_context/include/**",
+        "/home/bong/robot_ws/src/transport_drivers/serial_driver/include/**",
+        "/home/bong/robot_ws/src/transport_drivers/udp_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
